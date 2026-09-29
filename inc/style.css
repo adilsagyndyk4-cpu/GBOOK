@@ -90,11 +90,3 @@ ol li {
 	color: #2A4F6F;
 	background-color: transparent;
 }
-.greeting {
-	font-size: 90%;
-	color: #2A4F6F;
-	background-color: #F2F5F8;
-	border-left: 3px solid #2A4F6F;
-	padding: 0.6em 1em;
-	margin-bottom: 1.5em;
-}

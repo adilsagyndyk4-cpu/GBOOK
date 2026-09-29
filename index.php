@@ -1,10 +1,5 @@
-<?php
-  // Имя файла журнала
-  define('PATH_LOG', 'path.log');
-
-  include 'inc/headers.inc.php';
-  include 'inc/cookie.inc.php';   // куки - строго до вывода HTML
-  include 'inc/log.inc.php';      // запись пути в журнал посещений
+<?php 
+  include 'inc/headers.inc.php'; 
 ?>
 <!DOCTYPE html>
 <html>
@@ -30,16 +25,6 @@
     <!-- Заголовок -->
     <h1><?= $header?></h1>
     <!-- Заголовок -->
-    <!-- Приветствие (Задание 1, упражнение 2) -->
-    <p class="greeting">
-      <?php if ($lastVisit === '') { ?>
-        Спасибо, что зашли на огонек
-      <?php } else { ?>
-        Вы зашли к нам <?= $visitCounter ?> раз<br />
-        Последнее посещение: <?= $lastVisit ?>
-      <?php } ?>
-    </p>
-    <!-- Приветствие -->
     <!-- Область основного контента -->
     <?php 
       include 'inc/routing.inc.php'; 
@@ -59,8 +44,6 @@
       <li><a href='index.php?id=info'>Информация</a>
       </li>
       <li><a href='index.php?id=gbook'>Гостевая книга</a>
-      </li>
-      <li><a href='index.php?id=log'>Журнал посещений</a>
       </li>
     </ul>
     <!-- Навигация -->
