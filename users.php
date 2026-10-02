@@ -8,11 +8,15 @@ class User extends UserAbstract {
     public $name;
     public $login;
     public $password;
+    public static $count = 0;
 
     public function __construct($name, $login, $password) {
         $this->name = $name;
         $this->login = $login;
         $this->password = $password;
+        if (get_class($this) === "User") {
+            self::$count++;
+        }
     }
 
     public function showInfo() {
@@ -34,10 +38,12 @@ interface IAuthorizeUser {
 
 class SuperUser extends User implements ISuperUser, IAuthorizeUser {
     public $role;
+    public static $countSuper = 0;
 
     public function __construct($name, $login, $password, $role) {
         parent::__construct($name, $login, $password);
         $this->role = $role;
+        self::$countSuper++;
     }
 
     public function showInfo() {
@@ -81,3 +87,6 @@ echo "Авторизация (admin/admin123): " . ($result ? "true" : "false") 
 
 $result2 = $user->auth("admin", "wrong");
 echo "Авторизация (admin/wrong): " . ($result2 ? "true" : "false") . "<br>";
+
+echo "Всего обычных пользователей: " . User::$count . "<br>";
+echo "Всего супер-пользователей: " . SuperUser::$countSuper . "<br>";
