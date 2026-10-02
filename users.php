@@ -1,29 +1,28 @@
 <?php
-// Задание 1. Создание класса и его экземпляров
+// Задание 2. Использование конструктора и деструктора
 class User {
     public $name;
     public $login;
     public $password;
 
+    public function __construct($name, $login, $password) {
+        $this->name = $name;
+        $this->login = $login;
+        $this->password = $password;
+    }
+
     public function showInfo() {
         echo "Пользователь: {$this->name}, логин: {$this->login}, пароль: {$this->password}<br>";
     }
+
+    public function __destruct() {
+        echo "Пользователь {$this->login} удален<br>";
+    }
 }
 
-$user1 = new User();
-$user1->name = "Иван Иванов";
-$user1->login = "ivan";
-$user1->password = "12345";
-
-$user2 = new User();
-$user2->name = "Петр Петров";
-$user2->login = "petr";
-$user2->password = "qwerty";
-
-$user3 = new User();
-$user3->name = "Сидор Сидоров";
-$user3->login = "sidor";
-$user3->password = "abcde";
+$user1 = new User("Иван Иванов", "ivan", "12345");
+$user2 = new User("Петр Петров", "petr", "qwerty");
+$user3 = new User("Сидор Сидоров", "sidor", "abcde");
 
 $user1->showInfo();
 $user2->showInfo();
