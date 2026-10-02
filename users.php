@@ -1,71 +1,8 @@
 <?php
-// Задание 4. Абстрактные классы и интерфейсы
-abstract class UserAbstract {
-    abstract public function showInfo();
-}
-
-class User extends UserAbstract {
-    public $name;
-    public $login;
-    public $password;
-    public static $count = 0;
-
-    public function __construct($name, $login, $password) {
-        $this->name = $name;
-        $this->login = $login;
-        $this->password = $password;
-        if (get_class($this) === "User") {
-            self::$count++;
-        }
-    }
-
-    public function showInfo() {
-        echo "Пользователь: {$this->name}, логин: {$this->login}, пароль: {$this->password}<br>";
-    }
-
-    public function __destruct() {
-        echo "Пользователь {$this->login} удален<br>";
-    }
-}
-
-interface ISuperUser {
-    public function getInfo();
-}
-
-interface IAuthorizeUser {
-    public function auth($login, $password);
-}
-
-class SuperUser extends User implements ISuperUser, IAuthorizeUser {
-    public $role;
-    public static $countSuper = 0;
-
-    public function __construct($name, $login, $password, $role) {
-        parent::__construct($name, $login, $password);
-        $this->role = $role;
-        self::$countSuper++;
-    }
-
-    public function showInfo() {
-        echo "Пользователь: {$this->name}, логин: {$this->login}, пароль: {$this->password}, роль: {$this->role}<br>";
-    }
-
-    public function getInfo() {
-        return array(
-            "name" => $this->name,
-            "login" => $this->login,
-            "password" => $this->password,
-            "role" => $this->role
-        );
-    }
-
-    public function auth($login, $password) {
-        if ($login === $this->login && $password === $this->password) {
-            return true;
-        }
-        return false;
-    }
-}
+// Задание 6. Использование автозагрузки классов
+spl_autoload_register(function ($class) {
+    require __DIR__ . "/classes/{$class}.php";
+});
 
 $user1 = new User("Иван Иванов", "ivan", "12345");
 $user2 = new User("Петр Петров", "petr", "qwerty");
@@ -90,3 +27,4 @@ echo "Авторизация (admin/wrong): " . ($result2 ? "true" : "false") . 
 
 echo "Всего обычных пользователей: " . User::$count . "<br>";
 echo "Всего супер-пользователей: " . SuperUser::$countSuper . "<br>";
+
