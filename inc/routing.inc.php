@@ -4,6 +4,8 @@ switch($id){
 	case 'about': include 'inc/about.inc.php'; break;
 	case 'info': include 'inc/info.inc.php'; break;
 	case 'log': include 'inc/view-log.inc.php'; break;
+	case 'users': include 'inc/users.inc.php'; break;
+	case 'users-demo': include 'inc/users-demo.inc.php'; break;
 	case 'gbook': include 'inc/gbook.inc.php'; break;
 	default: include 'inc/index.inc.php';
 }	

@@ -1,4 +1,4 @@
-<?
+<?php
 $title = 'Супер-мега сайт';
 $header = "Добро пожаловать на наш сайт!";
 $id = strtolower(strip_tags(trim($_GET['id'] ?? '')));
@@ -19,6 +19,14 @@ switch($id){
 	case 'log': 
 		$title = 'Журнал посещений';
 		$header = 'Журнал посещений';
+		break;
+	case 'users':
+		$title = 'Пользователи';
+		$header = 'Пользователи сайта';
+		break;
+	case 'users-demo':
+		$title = 'Демонстрация классов';
+		$header = 'Лабораторная: классы PHP';
 		break;
 	case 'gbook': 
 		$title = 'Гостевая книга';

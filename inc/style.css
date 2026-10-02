@@ -90,3 +90,22 @@ ol li {
 	color: #2A4F6F;
 	background-color: transparent;
 }
+.msg {
+	padding: 6px 12px;
+	margin: 10px 0;
+	border-radius: 4px;
+}
+.msg-ok { background: #E3F4E3; border: 1px solid #8CC08C; color: #1F5A1F; }
+.msg-err { background: #FBE5E5; border: 1px solid #D08A8A; color: #8A1F1F; }
+table.users {
+	border-collapse: collapse;
+	margin: 10px 0 10px 1.2em;
+	font-size: 90%;
+}
+table.users th, table.users td {
+	border: 1px solid #B2BCC6;
+	padding: 4px 10px;
+	text-align: left;
+}
+table.users th { background: #E6ECF2; }
+form.inline { display: inline; padding-left: 0; }

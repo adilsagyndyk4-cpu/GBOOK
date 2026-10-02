@@ -1,5 +1,8 @@
 <?php 
   include 'inc/headers.inc.php'; 
+  if ($id === 'users') {
+    include 'inc/users-actions.inc.php';
+  }
 ?>
 <!DOCTYPE html>
 <html>
@@ -44,6 +47,8 @@
       <li><a href='index.php?id=info'>Информация</a>
       </li>
       <li><a href='index.php?id=gbook'>Гостевая книга</a>
+      </li>
+      <li><a href='index.php?id=users'>Пользователи</a>
       </li>
     </ul>
     <!-- Навигация -->

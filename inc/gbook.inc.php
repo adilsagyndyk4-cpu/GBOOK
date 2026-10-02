@@ -5,6 +5,9 @@ define('DB_LOGIN', 'root');
 define('DB_PASSWORD', '');
 define('DB_NAME', 'gbook');
 
+// Отключаем исключения mysqli: ошибки обрабатываем сами через проверки ниже
+mysqli_report(MYSQLI_REPORT_OFF);
+
 // Соединение с сервером БД и выбор базы данных
 $link = mysqli_connect(DB_HOST, DB_LOGIN, DB_PASSWORD, DB_NAME)
 	or die('Ошибка соединения с БД: ' . mysqli_connect_error());
@@ -13,15 +16,23 @@ mysqli_set_charset($link, 'utf8');
 
 /* Сохранение записи в БД */
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-	// Принимаем и фильтруем данные
-	$name  = mysqli_real_escape_string($link, trim(strip_tags($_POST['name'] ?? '')));
-	$email = mysqli_real_escape_string($link, trim(strip_tags($_POST['email'] ?? '')));
-	$msg   = mysqli_real_escape_string($link, trim(strip_tags($_POST['msg'] ?? '')));
+	// Принимаем данные (экранировать для SQL не нужно: это делают подготовленные запросы)
+	$name  = trim($_POST['name'] ?? '');
+	$email = trim($_POST['email'] ?? '');
+	$msg   = trim($_POST['msg'] ?? '');
 
 	if ($name !== '' && $msg !== '') {
-		$sql = "INSERT INTO msgs (name, email, msg) VALUES ('$name', '$email', '$msg')";
-		if (!mysqli_query($link, $sql)) {
-			echo '<p style="color:red">Ошибка при добавлении записи: ' . htmlspecialchars(mysqli_error($link)) . '</p>';
+		// Подготовленный запрос: вместо значений стоят метки ?
+		$stmt = mysqli_prepare($link, "INSERT INTO msgs (name, email, msg) VALUES (?, ?, ?)");
+		if ($stmt) {
+			// Привязываем значения к меткам: sss = три строки
+			mysqli_stmt_bind_param($stmt, 'sss', $name, $email, $msg);
+			if (!mysqli_stmt_execute($stmt)) {
+				echo '<p style="color:red">Ошибка при добавлении записи: ' . htmlspecialchars(mysqli_stmt_error($stmt)) . '</p>';
+			}
+			mysqli_stmt_close($stmt);
+		} else {
+			echo '<p style="color:red">Ошибка подготовки запроса: ' . htmlspecialchars(mysqli_error($link)) . '</p>';
 		}
 	} else {
 		echo '<p style="color:red">Заполните поля «Имя» и «Сообщение».</p>';
@@ -31,13 +42,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 /* Удаление записи из БД */
 if (isset($_GET['del'])) {
-	// Принимаем и фильтруем данные
+	// Принимаем данные: id должен быть целым положительным числом
 	$del = abs((int)$_GET['del']);
 
 	if ($del > 0) {
-		$sql = "DELETE FROM msgs WHERE id = $del";
-		if (!mysqli_query($link, $sql)) {
-			echo '<p style="color:red">Ошибка при удалении записи: ' . htmlspecialchars(mysqli_error($link)) . '</p>';
+		$stmt = mysqli_prepare($link, "DELETE FROM msgs WHERE id = ?");
+		if ($stmt) {
+			// i = целое число
+			mysqli_stmt_bind_param($stmt, 'i', $del);
+			if (!mysqli_stmt_execute($stmt)) {
+				echo '<p style="color:red">Ошибка при удалении записи: ' . htmlspecialchars(mysqli_stmt_error($stmt)) . '</p>';
+			}
+			mysqli_stmt_close($stmt);
+		} else {
+			echo '<p style="color:red">Ошибка подготовки запроса: ' . htmlspecialchars(mysqli_error($link)) . '</p>';
 		}
 	}
 }
@@ -57,6 +75,7 @@ Email: <br /><input type="text" name="email" maxlength="50" /><br />
 </form>
 <?php
 /* Вывод записей из БД */
+// В этом запросе нет данных от пользователя, поэтому обычного mysqli_query достаточно
 $sql = "SELECT id, name, email, msg, UNIX_TIMESTAMP(datetime) as dt
         FROM msgs
         ORDER BY id DESC";
